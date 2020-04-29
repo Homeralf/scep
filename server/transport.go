@@ -90,10 +90,12 @@ func decodeSCEPRequest(ctx context.Context, r *http.Request) (interface{}, error
 func message(r *http.Request) ([]byte, error) {
 	switch r.Method {
 	case "GET":
+		var msgBytes []byte
 		var msg string
 		q := r.URL.Query()
 		if _, ok := q["message"]; ok {
-			msg = q.Get("message")
+			msgBytes, _ = base64.StdEncoding.DecodeString(q.Get("message"))
+			msg = string(msgBytes)
 		}
 		return []byte(msg), nil
 	case "POST":
